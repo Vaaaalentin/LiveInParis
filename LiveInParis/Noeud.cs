@@ -8,6 +8,17 @@ namespace LiveInParis
 {
     public class Noeud
     {
+        public int id; 
 
+
+        public Noeud(int id)
+        {
+            this.id = id;
+        }
+
+        public int Id
+        {
+            get; set;
+        }
     }
 }
