@@ -9,23 +9,13 @@ namespace LiveInParis
 
     public class Lien
     {
-        public Noeud noeud1;
-        public Noeud noeud2;
+        public Noeud Noeud1 { get; set; }
+        public Noeud Noeud2 { get; set; }
 
         public Lien(Noeud noeud1, Noeud noeud2)
         {
-            this.noeud1 = noeud1;
-            this.noeud2 = noeud2;
-        }
-
-        public int Noeud1
-        {
-            get; set;
-        }
-
-        public int Noeud2
-        {
-            get; set;
+            this.Noeud1 = noeud1;
+            this.Noeud2 = noeud2;
         }
     }
     
