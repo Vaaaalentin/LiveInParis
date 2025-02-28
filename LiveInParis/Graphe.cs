@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,11 +67,6 @@ namespace LiveInParis
                     Liens.Add(new Lien(noeud1, noeud2));
                 }
             }
-
-
-
-
-
         }
 
         public int[,] CreerMatriceAdjacence()
@@ -83,6 +79,7 @@ namespace LiveInParis
             }
             return mat;
         }
+        
         public List<int>[] CreerListeAdjacence()
         {
             List<int>[] tab = new List<int>[Noeuds.Count];
@@ -100,7 +97,63 @@ namespace LiveInParis
             return tab;
         }
 
+        public void ParcoursLargeur(int depart)
+        {
+            List<int> visite = new List<int>();
+            List<int>[] parcours = CreerListeAdjacence();
 
+            Queue<int> file = new Queue<int>();
+
+            file.Enqueue(depart);
+            visite.Add(depart);
+
+            int compteSommet = 1;
+            while (file.Count > 0) 
+            {
+                int noeud = file.Dequeue();
+                Console.Write(noeud + " ");
+
+                foreach(int n in parcours[noeud - 1])
+                {
+                    if (!visite.Contains(n))
+                    {
+                        compteSommet++;
+                        file.Enqueue(n);
+                        visite.Add(n);
+                    }
+                }
+            }
+            Console.WriteLine("\nLe parcours en largeur a visité "+ compteSommet + " sommets !");
+        }
+
+        public void ParcoursProfondeur(int depart)
+        {
+            List<int> visite = new List<int>();
+            Stack<int> pile = new Stack<int>();
+
+            List<int>[] parcours = CreerListeAdjacence();
+
+            pile.Push(depart);
+
+            while (pile.Count > 0) 
+            { 
+                int noeud = pile.Pop();
+                if (!visite.Contains(noeud))
+                {
+                    visite.Add(noeud);
+                    Console.Write(noeud + " ");
+
+                    foreach(int n in parcours[noeud - 1])
+                    {
+                        if (!visite.Contains(n))
+                        {
+                            pile.Push(n);
+                        }
+                    }
+                }
+
+            }
+        }
 
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 
 namespace LiveInParis
 {
     internal class Program
     {
+        
         static void Main(string[] args)
         {
 
@@ -14,8 +16,26 @@ namespace LiveInParis
 
             List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
             AfficherListe(listeAdjacence);
+
+
+            int sommetDepart = -1;
             
-            
+           
+            while ( sommetDepart < 0 || sommetDepart > 34)
+            {   
+                Console.WriteLine("\nChoisissez un sommet de départ pour le parcours en largeur et en profondeur (entre 1 et 34)");
+                sommetDepart = int.Parse(Console.ReadLine());                   
+            }
+
+            Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
+            graphe.ParcoursLargeur(sommetDepart);
+
+
+           Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
+           graphe.ParcoursProfondeur(sommetDepart);
+
+           Console.WriteLine();
+
         }
 
 
@@ -43,9 +63,6 @@ namespace LiveInParis
                             graphe.AjouterLien(n1, n2);
                         }
                     }
-                        
-
-                    
                 }
             }
             catch (IOException e)
@@ -62,6 +79,7 @@ namespace LiveInParis
             }
             return graphe; 
         }
+
         static void AfficherMatrice(int[,] mat)
         {
             Console.WriteLine("Voici la matrice d'adjacence : \n");
@@ -77,6 +95,7 @@ namespace LiveInParis
             }
             Console.WriteLine("");
         }
+        
         static void AfficherListe(List<int>[] tab)
         {
             Console.WriteLine("Voici la liste d'adjacence : \n");
@@ -90,7 +109,6 @@ namespace LiveInParis
                 }
                 Console.WriteLine("");
             }
-            Console.WriteLine("");
         }
 
         
