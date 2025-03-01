@@ -47,7 +47,7 @@ namespace LiveInParis
              
         }
 
-        static Graphe RecupererValeurs()
+        public static Graphe RecupererValeurs()
         {
             StreamReader sReader = null;
             Graphe graphe = new Graphe();
