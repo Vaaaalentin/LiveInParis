@@ -47,6 +47,11 @@ namespace LiveInParis
              
         }
 
+        /// <summary>
+        /// Fonction classique permettant d'extraire les données du fichier soc-karate.mtx 
+        /// On créé ensuite le graphe à partir des données lues
+        /// </summary>
+        /// <returns>Un graphe qui contient les données du fichier en question</returns>
         public static Graphe RecupererValeurs()
         {
             StreamReader sReader = null;

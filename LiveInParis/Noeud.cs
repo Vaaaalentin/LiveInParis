@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace LiveInParis
 {
+    /// <summary>
+    /// Création de la classe noeud qui représente un sommet d'un graphe 
+    /// Chaque noeud est décrit par un entier
+    /// </summary>
     public class Noeud
     {
         public int Id { get; set; }

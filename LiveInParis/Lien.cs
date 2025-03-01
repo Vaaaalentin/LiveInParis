@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace LiveInParis
 {
-
+    /// <summary>
+    /// Création de la classe lien qui représente une arête entre 2 sommets
+    /// Un lien est représenté par 2 noeuds distincts
+    /// </summary>
     public class Lien
     {
         public Noeud Noeud1 { get; set; }
