@@ -8,34 +8,40 @@ namespace LiveInParis
         
         static void Main(string[] args)
         {
-
+            
             Graphe graphe = RecupererValeurs();
 
+            ///Matrice d'adjacence
             int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
             AfficherMatrice(matriceAdjacence);
 
+            ///Liste d'adjacence
             List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
             AfficherListe(listeAdjacence);
 
 
-            int sommetDepart = -1;
-            
-           
+            int sommetDepart = -1;                     
             while ( sommetDepart < 0 || sommetDepart > 34)
             {   
                 Console.WriteLine("\nChoisissez un sommet de départ pour le parcours en largeur et en profondeur (entre 1 et 34)");
                 sommetDepart = int.Parse(Console.ReadLine());                   
             }
 
+            ///Parcours en largeur
             Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
             graphe.ParcoursLargeur(sommetDepart);
 
+            ///Parcours en profondeur
+            Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
+            graphe.ParcoursProfondeur(sommetDepart);
 
-           Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
-           graphe.ParcoursProfondeur(sommetDepart);
+            Console.WriteLine("\n");
 
-           Console.WriteLine();
-
+            ///Vérification de la présence de cycles
+            bool existeCycle = graphe.ContientCycle();
+            if (existeCycle) { Console.WriteLine("\nLe graphe contient un ou plusieurs cycles"); }
+            else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
+             
         }
 
 

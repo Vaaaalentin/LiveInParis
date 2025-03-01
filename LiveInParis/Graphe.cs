@@ -155,5 +155,54 @@ namespace LiveInParis
             }
         }
 
+        public bool ContientCycle(int depart)
+        {
+            List<int> visite = new List<int>();
+            Stack<Tuple<int, int>> pile = new Stack<Tuple<int, int>>(); 
+
+            List<int>[] parcours = CreerListeAdjacence();
+
+            pile.Push(new Tuple<int, int>(depart, -1)); ///On utilise -1 parce que le noeud de départ n'a pas de parent
+
+            while (pile.Count > 0)
+            {
+                var (noeud, parent) = pile.Pop();
+                if (!visite.Contains(noeud))
+                {
+                   
+                    visite.Add(noeud);
+                    foreach (int voisin in parcours[noeud - 1])
+                    {
+                        if (!visite.Contains(voisin))
+                        {
+                            pile.Push(new Tuple<int, int>(voisin, noeud));
+                        }
+                        else if (voisin == parent && depart == 1) 
+                        {
+                            Console.Write(noeud + " ");
+                        }
+                        else if(voisin != parent )
+                        {
+                            if (depart == 1) { Console.Write(noeud + " "); }
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+        public bool ContientCycle()
+        {
+            foreach (Noeud node in Noeuds)
+            {
+                if (!ContientCycle(node.Id))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }
