@@ -10,7 +10,10 @@ namespace LiveInParis
         {
             
             Graphe graphe = RecupererValeurs();
+            string fichierImage = "graphe_rectangle_vide.png";
 
+            Dessin.DessinerGraphe(graphe, fichierImage);
+            Dessin.OuvrirImage(fichierImage);
             ///Matrice d'adjacence
             int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
             AfficherMatrice(matriceAdjacence);
@@ -43,7 +46,6 @@ namespace LiveInParis
             else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
              
         }
-
 
         static Graphe RecupererValeurs()
         {
@@ -119,4 +121,5 @@ namespace LiveInParis
 
         
     }
+
 }
