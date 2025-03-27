@@ -1,50 +1,59 @@
-﻿using System.Net.Sockets;
+﻿using MySql.Data.MySqlClient;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 
 namespace LiveInParis
 {
     internal class Program
     {
-        
+
         static void Main(string[] args)
         {
-            
-            Graphe graphe = RecupererValeurs();
-            string fichierImage = "graphe_rectangle_vide.png";
 
-            Dessin.DessinerGraphe(graphe, fichierImage);
-            Dessin.OuvrirImage(fichierImage);
-            ///Matrice d'adjacence
-            int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
-            AfficherMatrice(matriceAdjacence);
+            string connexionString = "SERVER=localhost;PORT=3306;DATABASE=LIVINPARIS;UID=root;PASSWORD=root";
+            BDD bdd = new BDD(connexionString);
 
-            ///Liste d'adjacence
-            List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
-            AfficherListe(listeAdjacence);
+            bdd.AfficherClientAsc();
+
+            bdd.SupprimerClient();
+            bdd.AfficherClientAsc();
+
+            //Graphe graphe = RecupererValeurs();
+            //string fichierImage = "graphe_rectangle_vide.png";
+
+            //Dessin.DessinerGraphe(graphe, fichierImage);
+            //Dessin.OuvrirImage(fichierImage);
+            /////Matrice d'adjacence
+            //int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
+            //AfficherMatrice(matriceAdjacence);
+
+            /////Liste d'adjacence
+            //List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
+            //AfficherListe(listeAdjacence);
 
 
-            int sommetDepart = -1;                     
-            while ( sommetDepart < 0 || sommetDepart > 34)
-            {   
-                Console.WriteLine("\nChoisissez un sommet de départ pour le parcours en largeur et en profondeur (entre 1 et 34)");
-                sommetDepart = int.Parse(Console.ReadLine());                   
-            }
+            //int sommetDepart = -1;                     
+            //while ( sommetDepart < 0 || sommetDepart > 34)
+            //{   
+            //    Console.WriteLine("\nChoisissez un sommet de départ pour le parcours en largeur et en profondeur (entre 1 et 34)");
+            //    sommetDepart = int.Parse(Console.ReadLine());                   
+            //}
 
-            ///Parcours en largeur
-            Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
-            graphe.ParcoursLargeur(sommetDepart);
+            /////Parcours en largeur
+            //Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
+            //graphe.ParcoursLargeur(sommetDepart);
 
-            ///Parcours en profondeur
-            Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
-            graphe.ParcoursProfondeur(sommetDepart);
+            /////Parcours en profondeur
+            //Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
+            //graphe.ParcoursProfondeur(sommetDepart);
 
-            Console.WriteLine("\n");
+            //Console.WriteLine("\n");
 
-            ///Vérification de la présence de cycles
-            bool existeCycle = graphe.ContientCycle();
-            if (existeCycle) { Console.WriteLine("\nLe graphe contient un ou plusieurs cycles"); }
-            else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
-             
+            /////Vérification de la présence de cycles
+            //bool existeCycle = graphe.ContientCycle();
+            //if (existeCycle) { Console.WriteLine("\nLe graphe contient un ou plusieurs cycles"); }
+            //else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
+
         }
 
         /// <summary>
@@ -59,11 +68,11 @@ namespace LiveInParis
             try
             {
                 sReader = new StreamReader("soc-karate.mtx");
-                string line; 
-                while((line = sReader.ReadLine()) != null)
+                string line;
+                while ((line = sReader.ReadLine()) != null)
                 {
-                    if (line[0] != '%') 
-                    { 
+                    if (line[0] != '%')
+                    {
                         string[] elem = line.Split(' ');
 
                         if (elem.Length == 2)
@@ -90,17 +99,17 @@ namespace LiveInParis
             {
                 if (sReader != null) { sReader.Close(); }
             }
-            return graphe; 
+            return graphe;
         }
 
         static void AfficherMatrice(int[,] mat)
         {
             Console.WriteLine("Voici la matrice d'adjacence : \n");
 
-            for(int i = 0; i < mat.GetLength(0); i++)
+            for (int i = 0; i < mat.GetLength(0); i++)
             {
                 string ligne = "";
-                for(int j = 0; j < mat.GetLength(1); j++)
+                for (int j = 0; j < mat.GetLength(1); j++)
                 {
                     ligne += mat[i, j] + " ";
                 }
@@ -108,7 +117,7 @@ namespace LiveInParis
             }
             Console.WriteLine("");
         }
-        
+
         static void AfficherListe(List<int>[] tab)
         {
             Console.WriteLine("Voici la liste d'adjacence : \n");
@@ -116,15 +125,34 @@ namespace LiveInParis
             for (int i = 0; i < tab.Length; i++)
             {
                 Console.Write(i + 1 + ":");
-                foreach(int z in tab[i])
+                foreach (int z in tab[i])
                 {
                     Console.Write(" " + z);
                 }
                 Console.WriteLine("");
             }
         }
-
-        
+        static int Actions(int rep)
+        {
+            Console.WriteLine("BONJOUR ! `\nSouhaitez-vous accéder à l'espace Client ? (y/n)");
+            string client = Console.ReadLine();
+            if (client == "y")
+            {
+                do
+                {
+                    Console.WriteLine("(1) Recruter un nouvel employé en cuisine. ");
+                    Console.WriteLine("(2) Recruter un nouvel employé en salle.");
+                    Console.WriteLine("(3) Licencier un employé.");
+                    Console.WriteLine("(4) Afficher informations restaurant. ");
+                    Console.WriteLine("(5) Acheter couverts supplémentaires. ");
+                    Console.WriteLine("(6) Voir informations recettes de la semaine.");
+                    Console.WriteLine("(7) Total factures à payer.");
+                    Console.WriteLine("(8) Passer à la semaine suivante.");
+                    rep = int.Parse(Console.ReadLine());
+                } while (rep < 1 || rep > 8);
+            }
+            return rep;
+        }
     }
 
 }
