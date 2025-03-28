@@ -5,9 +5,262 @@ namespace LiveInParis
 {
     internal class Program
     {
-        
+        static void InterfaceUtilisateur()
+        {
+            string connexionString = "SERVER=localhost;PORT=3306;DATABASE=LIVINPARIS;UID=root;PASSWORD=root";
+            BDD bdd = new BDD(connexionString);
+
+            bdd.AfficherClientAsc();
+            while (true)
+            {
+                Console.WriteLine("Menu principal :");
+                Console.WriteLine("1. Module Client");
+                Console.WriteLine("2. Module Cuisinier");
+                Console.WriteLine("3. Module Commande");
+                Console.WriteLine("4. Module Statistiques");
+                Console.WriteLine("5. Quitter");
+                Console.Write("Choisissez une option : ");
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.Clear();
+                        ModuleClient(bdd);
+                        break;
+                    case "2":
+                        Console.Clear();
+                        ModuleCuisinier(bdd);
+                        break;
+                    case "3":
+                        Console.Clear();
+                        ModuleCommande(bdd);
+                        break;
+                    case "4":
+                        Console.Clear();
+                        ModuleStatistiques(bdd);
+                        break;
+                    case "5":
+                        Console.Clear();
+                        bdd.Deconnexion();
+                        return;
+                    default:
+                        Console.WriteLine("\nOption invalide. Veuillez réessayer.");
+                        break;
+                }
+            }
+        }
+
+        static void ModuleClient(BDD bdd)
+        {
+            while (true)
+            {
+                Console.WriteLine("Module Client :");
+                Console.WriteLine("1. Ajouter un client");
+                Console.WriteLine("2. Supprimer un client");
+                Console.WriteLine("3. Modifier un client");
+                Console.WriteLine("4. Afficher les clients par ordre alphabétique");
+                Console.WriteLine("5. Afficher les clients par rue");
+                Console.WriteLine("6. Afficher les clients par montant des achats");
+                Console.WriteLine("7. Retour au menu principal");
+                Console.Write("Choisissez une option : ");
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine();
+                        bdd.AjouterClient();
+                        Console.WriteLine();
+                        break;
+                    case "2":
+                        Console.WriteLine();
+                        bdd.SupprimerClient();
+                        Console.WriteLine();
+                        break;
+                    case "3":
+                        Console.WriteLine();
+                        bdd.ModifierClient();
+                        Console.WriteLine();
+                        break;
+                    case "4":
+                        Console.WriteLine();
+                        bdd.AfficherClientAsc();
+                        Console.WriteLine();
+                        break;
+                    case "5":
+                        Console.Clear();
+                        bdd.AfficherClientRue();
+                        break;
+                    case "6":
+                        Console.WriteLine();
+                        bdd.AfficherClientAchat();
+                        Console.WriteLine();
+                        break;
+                    case "7":
+                        return;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Option invalide. Veuillez réessayer.");
+                        Console.WriteLine();
+                        break;
+
+                }
+            }
+        }
+
+        static void ModuleCuisinier(BDD bdd)
+        {
+            while (true)
+            {
+                Console.WriteLine("Module Cuisinier :");
+                Console.WriteLine("1. Ajouter un cuisinier");
+                Console.WriteLine("2. Supprimer un cuisinier");
+                Console.WriteLine("3. Modifier un cuisinier");
+                Console.WriteLine("4. Afficher les cuisiniers par ordre alphabétique");
+                Console.WriteLine("5. Afficher les clients servis par un cuisinier");
+                Console.WriteLine("6. Afficher les plats réalisés par fréquence");
+                Console.WriteLine("7. Afficher le plat du jour");
+                Console.WriteLine("8. Retour au menu principal");
+                Console.Write("Choisissez une option : ");
+                string choix = Console.ReadLine();
+
+                bdd.SupprimerClient();
+                bdd.AfficherClientAsc();
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine();
+                        bdd.AjouterCuisinier();
+                        Console.WriteLine();
+                        break;
+                    case "2":
+                        Console.WriteLine();
+                        bdd.SupprimerCuisinier();
+                        Console.WriteLine();
+                        break;
+                    case "3":
+                        Console.WriteLine();
+                        bdd.ModifierCuisinier();
+                        Console.WriteLine();
+                        break;
+                    case "4":
+                        Console.WriteLine();
+                        bdd.AfficherCusinierAsc();
+                        Console.WriteLine();
+                        break;
+                    case "5":
+                        Console.WriteLine();
+                        bdd.ClientsServis();
+                        Console.WriteLine();
+                        break;
+                    case "6":
+                        Console.WriteLine();
+                        bdd.PlatsFrequences();
+                        Console.WriteLine();
+                        break;
+                    case "7":
+                        Console.WriteLine();
+                        bdd.AfficherPlatDuJour();
+                        Console.WriteLine();
+                        break;
+                    case "8":
+                        return;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Option invalide. Veuillez réessayer.");
+                        Console.WriteLine();
+                        break;
+                }
+            }
+        }
+
+        static void ModuleCommande(BDD bdd)
+        {
+            while (true)
+            {
+                Console.WriteLine("Module Commande :");
+                Console.WriteLine("1. Calculer le prix d'une commande");
+                Console.WriteLine("2. Retour au menu principal");
+                Console.Write("Choisissez une option : ");
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine();
+                        bdd.CalculerPrixCommande();
+                        Console.WriteLine();
+                        break;
+                    case "2":
+                        return;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Option invalide. Veuillez réessayer.");
+                        Console.WriteLine();
+                        break;
+                }
+            }
+        }
+
+        static void ModuleStatistiques(BDD bdd)
+        {
+            while (true)
+            {
+                Console.WriteLine("Module Statistiques :");
+                Console.WriteLine("1. Afficher par cuisinier le nombre de livraisons effectuées");
+                Console.WriteLine("2. Afficher les commandes selon une période de temps");
+                Console.WriteLine("3. Afficher la moyenne des prix des commandes");
+                Console.WriteLine("4. Afficher la moyenne des comptes clients");
+                Console.WriteLine("5. Afficher la liste des commandes pour un client selon la nationalité des plats");
+                Console.WriteLine("6. Retour au menu principal");
+                Console.Write("Choisissez une option : ");
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine();
+                        bdd.AfficherCommandesCuisinier();
+                        Console.WriteLine();
+                        break;
+                    case "2":
+                        Console.WriteLine();
+                        Console.Write("Date de début (YYYY-MM-DD) : ");
+                        DateTime datedebut = DateTime.Parse(Console.ReadLine());
+                        Console.Write("Date de fin (YYYY-MM-DD) : ");
+                        DateTime datefin = DateTime.Parse(Console.ReadLine());
+                        bdd.AfficherCommandesTemps(datedebut, datefin);
+                        Console.WriteLine();
+                        break;
+                    case "3":
+                        Console.WriteLine();
+                        bdd.AfficherMoyennePrixCommandes();
+                        Console.WriteLine();
+                        break;
+                    case "4":
+                        Console.WriteLine();
+                        bdd.AfficherMoyenneCompteClients();
+                        Console.WriteLine();
+                        break;
+                    case "5":
+                        Console.WriteLine();
+                        bdd.ListeCommandeClients();
+                        Console.WriteLine();
+                        break;
+                    case "6":
+                        return;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Option invalide. Veuillez réessayer.");
+                        Console.WriteLine();
+                        break;
+                }
+            }
+        }
         static void Main(string[] args)
         {
+            InterfaceUtilisateur();
 
             ///On peut mettre un graphe de station en mettant une variable /!\
             Graphe<Station> graphe = RecupererValeurs();
