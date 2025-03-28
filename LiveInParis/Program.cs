@@ -8,42 +8,59 @@ namespace LiveInParis
         
         static void Main(string[] args)
         {
-            
-            Graphe graphe = RecupererValeurs();
-            string fichierImage = "graphe_rectangle_vide.png";
 
-            Dessin.DessinerGraphe(graphe, fichierImage);
-            Dessin.OuvrirImage(fichierImage);
+            ///On peut mettre un graphe de station en mettant une variable /!\
+            Graphe<Station> graphe = RecupererValeurs();
+            Console.WriteLine("Nombre de stations enregistrées : "+ graphe.Noeuds.Count);
+            Console.WriteLine("Nombre de liens enregistrés : " + graphe.Liens.Count);
+            Console.WriteLine("");
+            foreach (Noeud < Station > n in graphe.Noeuds) { 
+                if(n.type.libStation == "Charles de Gaulle - Etoile") { n.type.InfoStation(); }
+            }
+            Console.WriteLine("");
+            for (int i = 30; i < 60; i++)
+            {
+                graphe.Liens[i].InfoLien();
+            }
+
+
+            //string fichierImage = "graphe_rectangle_vide.png";
+            //Dessin.DessinerGraphe(graphe, fichierImage);
+            //Dessin.OuvrirImage(fichierImage);
+
             ///Matrice d'adjacence
-            int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
-            AfficherMatrice(matriceAdjacence);
+            //int[,] matriceAdjacence = graphe.CreerMatriceAdjacence();
+            //AfficherMatrice(matriceAdjacence);
 
-            ///Liste d'adjacence
-            List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
-            AfficherListe(listeAdjacence);
+            /////Liste d'adjacence
+            //List<int>[] listeAdjacence = graphe.CreerListeAdjacence();
+            //AfficherListe(listeAdjacence);
 
 
-            int sommetDepart = -1;                     
-            while ( sommetDepart < 0 || sommetDepart > 34)
+            int sommetDepart = -1;
+            bool estEntier = true;
+            while ( sommetDepart < 0 || sommetDepart > 34 || estEntier == false)
             {   
                 Console.WriteLine("\nChoisissez un sommet de départ pour le parcours en largeur et en profondeur (entre 1 et 34)");
-                sommetDepart = int.Parse(Console.ReadLine());                   
+                string input = Console.ReadLine();
+                estEntier = int.TryParse(input, out sommetDepart);
+
             }
 
             ///Parcours en largeur
-            Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
-            graphe.ParcoursLargeur(sommetDepart);
+            //Console.WriteLine("\nParcours en Largeur à partir du sommet " + sommetDepart + " : ");
+            //graphe.ParcoursLargeur(sommetDepart);
 
-            ///Parcours en profondeur
-            Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
-            graphe.ParcoursProfondeur(sommetDepart);
+            /////Parcours en profondeur
+            //Console.WriteLine("\n\nParcours en Profondeur à partir du sommet " + sommetDepart + " : ");
+            //graphe.ParcoursProfondeur(sommetDepart);
 
-            Console.WriteLine("\n");
+            //Console.WriteLine("\n");
 
-            ///Vérification de la présence de cycles
-            bool existeCycle = graphe.ContientCycle();
-            if (existeCycle) { Console.WriteLine("\nLe graphe contient un ou plusieurs cycles"); }
-            else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
+            /////Vérification de la présence de cycles
+            //bool existeCycle = graphe.ContientCycle();
+            //if (existeCycle) { Console.WriteLine("\nLe graphe contient un ou plusieurs cycles"); }
+            //else { Console.WriteLine("\nLe graphe ne contient pas de cycle"); }
              
         }
 
@@ -52,77 +69,145 @@ namespace LiveInParis
         /// On créé ensuite le graphe à partir des données lues
         /// </summary>
         /// <returns>Un graphe qui contient les données du fichier en question</returns>
-        public static Graphe RecupererValeurs()
+
+        static Graphe<Station> RecupererValeurs()
         {
+            Graphe<Station> graphe = new Graphe<Station>();
             StreamReader sReader = null;
-            Graphe graphe = new Graphe();
+
             try
             {
-                sReader = new StreamReader("soc-karate.mtx");
-                string line; 
-                while((line = sReader.ReadLine()) != null)
+                sReader = new StreamReader("MetroParis(Noeuds).csv");
+                string line;
+                while ((line = sReader.ReadLine()) != null)
                 {
-                    if (line[0] != '%') 
-                    { 
-                        string[] elem = line.Split(' ');
+                    if (line[0] != 'I')
+                    {
+                        string[] elem = line.Split(';');
+                        elem[1] = (elem[1] == "3bis") ? "31" : elem[1];
+                        elem[1] = (elem[1] == "7bis") ? "71" : elem[1];
+                        string number = elem[3].Replace('.', ',');
+                        string number2 = elem[4].Replace('.', ',');
 
-                        if (elem.Length == 2)
-                        {
-                            int n1 = int.Parse(elem[0]);
-                            int n2 = int.Parse(elem[1]);
+                        Station station = new Station(int.Parse(elem[0]), int.Parse(elem[1]), elem[2],
+                            double.Parse(number), double.Parse(number2), elem[5], int.Parse(elem[6]));
 
-                            graphe.AjouterNoeud(n1);
-                            graphe.AjouterNoeud(n2);
-                            graphe.AjouterLien(n1, n2);
-                        }
+                        graphe.AjouterNoeud(station.IdStation, station);
+                        
                     }
                 }
+                Console.WriteLine("Extraction terminée des stations.");
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.Message + " Yo ");
+                Console.WriteLine(e.Message + " Erreur 1 ");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message + " Yo2 ");
+                Console.WriteLine(e.Message + " Erreur 2 ");
             }
             finally
             {
                 if (sReader != null) { sReader.Close(); }
             }
-            return graphe; 
-        }
 
-        static void AfficherMatrice(int[,] mat)
-        {
-            Console.WriteLine("Voici la matrice d'adjacence : \n");
-
-            for(int i = 0; i < mat.GetLength(0); i++)
+            try
             {
-                string ligne = "";
-                for(int j = 0; j < mat.GetLength(1); j++)
+                sReader = new StreamReader("MetroParis(Arcs).csv");
+                string line;
+ 
+                while ((line = sReader.ReadLine()) != null)
                 {
-                    ligne += mat[i, j] + " ";
+                    if (line[0] != 'S')
+                    {
+
+                        string[] elem = line.Split(';');
+
+                        if (elem[2]!= "") //Eviter les erreurs avec les départ de ligne
+                        {
+                            ///Stationfin la station d'arrivee
+                            Noeud<Station> stationfin = graphe.Noeuds.FirstOrDefault(n => n.Id == int.Parse(elem[2]));
+                            ///Stationdep la station de départ
+                            Noeud<Station> stationdep = graphe.Noeuds.FirstOrDefault(n => n.Id == int.Parse(elem[0]));
+
+                            graphe.AjouterLien(stationdep, stationfin, int.Parse(elem[4]), false);
+                        }
+                        if (elem[3] != "") //Eviter les erreurs avec les terminus
+                        {
+                            Noeud<Station> stationdep = graphe.Noeuds.FirstOrDefault(n => n.Id == int.Parse(elem[0]));
+                            ///Stationdep la station de départ
+                            Noeud<Station> stationfin = graphe.Noeuds.FirstOrDefault(n => n.Id == int.Parse(elem[3]));
+
+                            graphe.AjouterLien(stationdep, stationfin, int.Parse(elem[4]), false);
+                        }
+                        if (elem[5] != "")
+                        {
+                            Noeud<Station> stationdep = graphe.Noeuds.FirstOrDefault(n => n.Id == int.Parse(elem[0]));
+                            List<Noeud<Station>> Corresp = new List<Noeud<Station>>();
+                            foreach(Noeud<Station> noeud in graphe.Noeuds)
+                            {
+                                if(noeud.type.libStation == elem[1] && noeud.type.IdStation != int.Parse(elem[0]))
+                                {
+                                    Corresp.Add(noeud);
+                                }
+                            }
+                            foreach (Noeud<Station> station in Corresp) {
+                                graphe.AjouterLien(stationdep, station, int.Parse(elem[5]), true);
+                            }
+
+                        }
+                    }
                 }
-                Console.WriteLine(ligne);
+                Console.WriteLine("Extraction terminée des liens.");
             }
-            Console.WriteLine("");
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message + " Erreur 1 ");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + " Erreur 2 ");
+            }
+            finally
+            {
+                if (sReader != null) { sReader.Close(); }
+            }
+
+            return graphe;
+
         }
+
+
+        //static void AfficherMatrice(int[,] mat)
+        //{
+        //    Console.WriteLine("Voici la matrice d'adjacence : \n");
+
+        //    for(int i = 0; i < mat.GetLength(0); i++)
+        //    {
+        //        string ligne = "";
+        //        for(int j = 0; j < mat.GetLength(1); j++)
+        //        {
+        //            ligne += mat[i, j] + " ";
+        //        }
+        //        Console.WriteLine(ligne);
+        //    }
+        //    Console.WriteLine("");
+        //}
         
-        static void AfficherListe(List<int>[] tab)
-        {
-            Console.WriteLine("Voici la liste d'adjacence : \n");
+        //static void AfficherListe(List<int>[] tab)
+        //{
+        //    Console.WriteLine("Voici la liste d'adjacence : \n");
 
-            for (int i = 0; i < tab.Length; i++)
-            {
-                Console.Write(i + 1 + ":");
-                foreach(int z in tab[i])
-                {
-                    Console.Write(" " + z);
-                }
-                Console.WriteLine("");
-            }
-        }
+        //    for (int i = 0; i < tab.Length; i++)
+        //    {
+        //        Console.Write(i + 1 + ":");
+        //        foreach(int z in tab[i])
+        //        {
+        //            Console.Write(" " + z);
+        //        }
+        //        Console.WriteLine("");
+        //    }
+        //}
 
         
     }
